@@ -10,7 +10,7 @@ class ListaMercadoLivreScraper:
 
     def __init__(self, search: str, negative_keywords: list[str] | None = None, pages: int = 3):
         """
-        Initialize the Scrapper with a search term and optional negative keywords.
+        Initialize the ListaMercadoLivreScraper with a search term and optional negative keywords.
 
         :param search: The search term to look for on Mercado Livre.
         :param negative_keywords: A list of keywords to filter out unwanted results.

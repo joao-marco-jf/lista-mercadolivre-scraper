@@ -2,10 +2,10 @@ from scraper import ListaMercadoLivreScraper
 
 def main():
 
-    scrapper = ListaMercadoLivreScraper(search="iphone 16 pro", negative_keywords=["max"])
-    html = scrapper.fetch()
-    scrapper.parse(html)
-    items = scrapper.get_items()
+    scraper = ListaMercadoLivreScraper(search="iphone 16 pro", negative_keywords=["max"])
+    html = scraper.fetch()
+    scraper.parse(html)
+    items = scraper.get_items()
 
     for item in items:
         print(f"Title: {item['title']}, Price: {item['price']}")

@@ -26,8 +26,8 @@ Este projeto foi desenvolvido para facilitar a coleta de dados de produtos do Me
 
 1. **Clone o repositório**:
 ```bash
-git clone https://github.com/joao-marco-jf/mercado-livre-scrapper.git
-cd mercado-livre-scrapper
+git clone https://github.com/joao-marco-jf/lista-mercadolivre-scraper.git
+cd lista-mercadolivre-scraper
 ```
 
 2. **Instale as dependências**:
@@ -40,15 +40,15 @@ pip install -r requirements.txt
 ### Exemplo Básico
 
 ```python
-from scrapper import Scrapper
+from scraper import ListaMercadoLivreScraper
 
 # Criar uma instância do scraper
-scrapper = Scrapper(search="iphone 16 pro", negative_keywords=["max"])
+scraper = ListaMercadoLivreScraper(search="iphone 16 pro", negative_keywords=["max"])
 
 # Buscar e extrair dados
-html = scrapper.fetch()
-scrapper.parse(html)
-items = scrapper.get_items()
+html = scraper.fetch()
+scraper.parse(html)
+items = scraper.get_items()
 
 # Exibir resultados
 for item in items:
@@ -57,7 +57,7 @@ for item in items:
     print("-" * 50)
 ```
 
-### Parâmetros da Classe Scrapper
+### Parâmetros da Classe ListaMercadoLivreScraper
 
 - **search** (str): Termo de busca (obrigatório)
 - **negative_keywords** (list[str], opcional): Lista de palavras para filtrar resultados indesejados
@@ -67,7 +67,7 @@ for item in items:
 
 ```python
 # Buscar iPhone 16, mas excluir modelos Pro Max e Plus
-scrapper = Scrapper(
+scraper = ListaMercadoLivreScraper(
     search="iphone 16",
     negative_keywords=["pro max", "plus", "usado"]
 )
@@ -76,11 +76,11 @@ scrapper = Scrapper(
 ## 📝 Estrutura do Projeto
 
 ```
-mercado-livre-scrapper/
-├── scrapper.py          # Classe principal do scraper
+lista-mercadolivre-scraper/
+├── scraper.py          # Classe principal do scraper
 ├── main.py             # Exemplo de uso
 ├── requirements.txt    # Dependências do projeto
-└── README.md          # Este arquivo
+└── README.md           # Este arquivo
 ```
 
 ## 🔧 Como Funciona
