@@ -6,7 +6,7 @@ from bs4.element import Tag
 
 from typing import List, Dict, Any
 
-class Scrapper:
+class ListaMercadoLivreScraper:
 
     def __init__(self, search: str, negative_keywords: list[str] | None = None, pages: int = 3):
         """

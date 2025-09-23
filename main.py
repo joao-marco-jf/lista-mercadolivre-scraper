@@ -1,8 +1,8 @@
-from scrapper import Scrapper
+from scraper import ListaMercadoLivreScraper
 
 def main():
 
-    scrapper = Scrapper(search="iphone 16 pro", negative_keywords=["max"])
+    scrapper = ListaMercadoLivreScraper(search="iphone 16 pro", negative_keywords=["max"])
     html = scrapper.fetch()
     scrapper.parse(html)
     items = scrapper.get_items()
