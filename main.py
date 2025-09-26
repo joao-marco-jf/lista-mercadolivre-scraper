@@ -2,7 +2,7 @@ from scraper import ListaMercadoLivreScraper
 
 def main():
 
-    scraper = ListaMercadoLivreScraper(search="iphone 16 pro", negative_keywords=["max"])
+    scraper = ListaMercadoLivreScraper(search="notebook lenovo ideapad i3", negative_keywords=["recondicionado", "game"])
     html = scraper.fetch()
     scraper.parse(html)
     items = scraper.get_items()

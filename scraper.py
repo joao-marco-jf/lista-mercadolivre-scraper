@@ -50,20 +50,31 @@ class ListaMercadoLivreScraper:
         items = soup.find_all('div', class_='poly-card')
 
         for item in items:
-            if isinstance(item, Tag):
-                title_tag = item.find('h3', class_='poly-component__title-wrapper')
-                price_tag = item.find('span', class_='andes-money-amount__fraction')
+            if not isinstance(item, Tag):
+                continue
+            
+            title_tag = item.find('h3', class_='poly-component__title-wrapper')
+            current_price_tag = item.find('div', class_='poly-price__current')
 
-                if isinstance(title_tag, Tag) and isinstance(price_tag, Tag):
-                    title = title_tag.get_text(strip=True).lower()
-                    price = price_tag.get_text(strip=True)
+            if not isinstance(current_price_tag, Tag):
+                continue
 
-                    if not any(neg_kw.lower() in title for neg_kw in self.negative_keywords):
-                        self.items.append({
-                            'title': title,
-                            'price': price
-                        })
-    
+            price_tag = current_price_tag.find('span', class_='andes-money-amount__fraction')
+
+            if not isinstance(title_tag, Tag) or not isinstance(price_tag, Tag):
+                continue
+
+            title = title_tag.get_text(strip=True).lower()
+            price = price_tag.get_text(strip=True)
+
+            if any(kw.lower() in title for kw in self.negative_keywords):
+                continue
+
+            self.items.append({
+                'title': title,
+                'price': price
+            })
+
     def get_items(self) -> List[Dict[str, Any]]:
         """
         Get the list of filtered items.
