@@ -3,12 +3,13 @@ import time
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from requests.exceptions import HTTPError
 
 from typing import List, Dict, Any
 
 class ListaMercadoLivreScraper:
 
-    def __init__(self, search: str, negative_keywords: list[str] | None = None, pages: int = 3):
+    def __init__(self, search: str, negative_keywords: list[str] | None = None, max_pages: int = 1):
         """
         Initialize the ListaMercadoLivreScraper with a search term and optional negative keywords.
 
@@ -16,11 +17,33 @@ class ListaMercadoLivreScraper:
         :param negative_keywords: A list of keywords to filter out unwanted results.
         """
         self.search = search.replace(" ", "-").lower()
+        self.max_pages = max_pages if max_pages > 0 else 1
         self.url = f"https://lista.mercadolivre.com.br/{self.search}_NoIndex_True"
         self.negative_keywords = negative_keywords if negative_keywords else []
+        self.listings_per_page = 0;
         self.items: List[Dict[str, Any]] = []
         self.session = requests.Session()
 
+    def run(self):
+        """
+        Run the scraper to fetch and parse items from Mercado Livre.
+
+        :return: A list of dictionaries containing product details.
+        """
+        for _ in range(self.max_pages):
+            try:
+                html = self.fetch()
+                self.parse(html)
+                self.url = self.get_next_page_url()
+            except HTTPError as e:
+                if e.response.status_code == 404:
+                    print(f"Fim das páginas encontradas - parando a busca")
+                    break
+                else:
+                    raise
+        
+        return self.get_items()
+    
     def fetch(self) -> str:
         """
         Fetch the HTML content of the search results page.
@@ -29,10 +52,8 @@ class ListaMercadoLivreScraper:
         """
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         
-        # Configurar headers na sessão
         self.session.headers.update(headers)
         
-        # Pequeno delay para parecer mais humano
         time.sleep(1)
         
         response = self.session.get(self.url)
@@ -67,6 +88,8 @@ class ListaMercadoLivreScraper:
             title = title_tag.get_text(strip=True).lower()
             price = price_tag.get_text(strip=True)
 
+            self.listings_per_page += 1
+
             if any(kw.lower() in title for kw in self.negative_keywords):
                 continue
 
@@ -82,3 +105,12 @@ class ListaMercadoLivreScraper:
         :return: A list of dictionaries containing product details.
         """
         return self.items
+    
+    def get_next_page_url(self) -> str:
+        """
+        Get the URL for the next page of search results.
+
+        :param current_page: The current page number.
+        :return: The URL for the next page or None if there are no more pages.
+        """
+        return f"https://lista.mercadolivre.com.br/{self.search}_Desde_{self.listings_per_page + 1}_NoIndex_True"
